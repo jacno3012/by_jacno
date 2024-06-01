@@ -3,54 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bé Dịt dễ thương</title>
+    <title>Bé Zịt dễ thương</title>
     <style>
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            overflow: hidden;
+            background-color: black;
         }
-        .heart {
-            position: relative;
-            width: 100px;
-            height: 100px;
+        canvas {
+            display: block;
         }
-        .heart::before,
-        .heart::after {
-            content: "";
+        #message {
             position: absolute;
-            width: 100px;
-            height: 100px;
-            border-radius: 50px 50px 0 0;
-            background: red;
-        }
-        .heart::before {
-            left: 50px;
-            transform: rotate(-45deg);
-            transform-origin: 0 100%;
-        }
-        .heart::after {
-            left: 0;
-            transform: rotate(45deg);
-            transform-origin: 100% 100%;
-        }
-        .heart {
-            animation: heartbeat 1s infinite;
-        }
-        @keyframes heartbeat {
-            0%, 100% {
-                transform: scale(1);
-            }
-            25%, 75% {
-                transform: scale(1.2);
-            }
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: Arial, sans-serif;
+            font-size: 48px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
     </style>
 </head>
 <body>
-    <div class="heart"></div>
+    <canvas id="canvas"></canvas>
+    <div id="message">Love Bé Dịt</div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        function drawHeart(x, y, size, color) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.scale(size, size);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.bezierCurveTo(0, -3, 5, -3, 5, 0);
+            ctx.bezierCurveTo(5, 3, 0, 5, 0, 8);
+            ctx.bezierCurveTo(0, 5, -5, 3, -5, 0);
+            ctx.bezierCurveTo(-5, -3, 0, -3, 0, 0);
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function random(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        class Particle {
+            constructor(x, y, size, color, speed, angle) {
+                this.x = x;
+                this.y = y;
+                this.size = size;
+                this.color = color;
+                this.speed = speed;
+                this.angle = angle;
+                this.life = 1;
+                this.decay = random(0.01, 0.03);
+            }
+
+            update() {
+                this.x += Math.cos(this.angle) * this.speed;
+                this.y += Math.sin(this.angle) * this.speed;
+                this.life -= this.decay;
+            }
+
+            draw() {
+                if (this.life > 0) {
+                    drawHeart(this.x, this.y, this.size * this.life, this.color);
+                }
+            }
+        }
+
+        class Firework {
+            constructor(x, y, colors) {
+                this.x = x;
+                this.y = y;
+                this.particles = [];
+                this.colors = colors;
+
+                for (let i = 0; i < 100; i++) {
+                    this.particles.push(new Particle(
+                        this.x,
+                        this.y,
+                        random(0.1, 0.3),
+                        this.colors[Math.floor(Math.random() * this.colors.length)],
+                        random(2, 5),
+                        random(0, Math.PI * 2)
+                    ));
+                }
+            }
+
+            update() {
+                for (let particle of this.particles) {
+                    particle.update();
+                }
+                this.particles = this.particles.filter(particle => particle.life > 0);
+            }
+
+            draw() {
+                for (let particle of this.particles) {
+                    particle.draw();
+                }
+            }
+        }
+
+        const fireworks = [];
+        const colors = ['#FF1461', '#18FF92', '#5A87FF', '#FBF38C'];
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (Math.random() < 0.05) {
+                fireworks.push(new Firework(random(0, canvas.width), random(0, canvas.height), colors));
+            }
+
+            for (let firework of fireworks) {
+                firework.update();
+                firework.draw();
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
 </body>
 </html>

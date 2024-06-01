@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trái Tim Dễ Thương</title>
+    <title>Trái Tim Chuyển Động</title>
     <style>
         body {
             display: flex;
@@ -36,6 +36,17 @@
             left: 0;
             transform: rotate(45deg);
             transform-origin: 100% 100%;
+        }
+        .heart {
+            animation: heartbeat 1s infinite;
+        }
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            25%, 75% {
+                transform: scale(1.2);
+            }
         }
     </style>
 </head>

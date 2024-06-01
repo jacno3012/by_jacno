@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bé Zịt dễ thương</title>
+    <title>Pháo Hoa và Hình Trái Tim</title>
     <style>
         body {
             margin: 0;
@@ -15,7 +15,7 @@
         canvas {
             display: block;
         }
-        #message {
+        .message {
             position: absolute;
             top: 10%;
             width: 100%;
@@ -23,7 +23,25 @@
             font-size: 48px;
             color: white;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            animation: moveText 5s linear infinite;
+            animation: moveText 10s linear infinite;
+        }
+        .message2 {
+            position: absolute;
+            top: 20%;
+            width: 100%;
+            text-align: center;
+            font-size: 48px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            animation: moveText 10s linear infinite reverse;
+        }
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #FF1461;
+            border-radius: 50%;
+            animation: moveHeart 10s linear infinite;
         }
         @keyframes moveText {
             0% {
@@ -33,11 +51,20 @@
                 transform: translateX(100%);
             }
         }
+        @keyframes moveHeart {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-200px) rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body>
     <canvas id="canvas"></canvas>
-    <div id="message">Bé Zịt dễ thương nhất</div>
+    <div class="message">Nụ cười của em là thứ ngọt ngào nhất rồi á</div>
+    <div class="message2">Happy 1/6 bé Zịt nhé</div>
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
@@ -122,28 +149,63 @@
         }
 
         const fireworks = [];
+        const hearts = [];
         const colors = ['#FF1461', '#18FF92', '#5A87FF', '#FBF38C', '#FF61F6', '#FFA500'];
+
+        function createFireworks() {
+            for (let i = 0; i < 5; i++) {
+                fireworks.push(new Firework(
+                    random(0, canvas.width),
+                    random(0, canvas.height),
+                    colors
+                ));
+            }
+        }
+
+        function createHearts() {
+            for (let i = 0; i < 50; i++) {
+                hearts.push(new Particle(
+                    random(0, canvas.width),
+                    random(0, canvas.height),
+                    random(0.1, 0.5),
+                    colors[Math.floor(Math.random() * colors.length)],
+                    random(1, 3),
+                    random(0, Math.PI * 2)
+                ));
+            }
+        }
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            if (Math.random() < 0.1) {
-                fireworks.push(new Firework(random(0, canvas.width), random(0, canvas.height), colors));
-            }
 
             for (let firework of fireworks) {
                 firework.update();
                 firework.draw();
             }
 
+            for (let heart of hearts) {
+                heart.update();
+                heart.draw();
+            }
+
             requestAnimationFrame(animate);
         }
 
+        createFireworks();
+        createHearts();
         animate();
+
+        // Tạo pháo hoa và trái tim mới mỗi 1 giây
+        setInterval(createFireworks, 1000);
+        setInterval(createHearts, 1000);
 
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+            fireworks.length = 0;
+            hearts.length = 0;
+            createFireworks();
+            createHearts();
         });
     </script>
 </body>

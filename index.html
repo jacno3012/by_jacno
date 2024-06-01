@@ -9,19 +9,29 @@
             margin: 0;
             overflow: hidden;
             background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
         }
         canvas {
             display: block;
         }
         #message {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-family: Arial, sans-serif;
+            top: 10%;
+            width: 100%;
+            text-align: center;
             font-size: 48px;
             color: white;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            animation: moveText 5s linear infinite;
+        }
+        @keyframes moveText {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
         }
     </style>
 </head>
@@ -85,13 +95,13 @@
                 this.particles = [];
                 this.colors = colors;
 
-                for (let i = 0; i < 100; i++) {
+                for (let i = 0; i < 200; i++) {
                     this.particles.push(new Particle(
                         this.x,
                         this.y,
-                        random(0.1, 0.3),
+                        random(0.2, 0.6),
                         this.colors[Math.floor(Math.random() * this.colors.length)],
-                        random(2, 5),
+                        random(3, 7),
                         random(0, Math.PI * 2)
                     ));
                 }
@@ -112,12 +122,12 @@
         }
 
         const fireworks = [];
-        const colors = ['#FF1461', '#18FF92', '#5A87FF', '#FBF38C'];
+        const colors = ['#FF1461', '#18FF92', '#5A87FF', '#FBF38C', '#FF61F6', '#FFA500'];
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            if (Math.random() < 0.05) {
+            if (Math.random() < 0.1) {
                 fireworks.push(new Firework(random(0, canvas.width), random(0, canvas.height), colors));
             }
 

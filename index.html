@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pháo Hoa và Hình Trái Tim</title>
+    <title>Bé Zịt Dễ Thương</title>
     <style>
         body {
             margin: 0;
@@ -23,7 +23,7 @@
             font-size: 48px;
             color: white;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            animation: moveText 10s linear infinite;
+            animation: moveText 15s linear infinite;
         }
         .message2 {
             position: absolute;
@@ -33,15 +33,15 @@
             font-size: 48px;
             color: white;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            animation: moveText 10s linear infinite reverse;
+            animation: moveText 15s linear infinite reverse;
         }
-        .heart {
+        .star {
             position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: #FF1461;
+            width: 2px;
+            height: 2px;
+            background: white;
             border-radius: 50%;
-            animation: moveHeart 10s linear infinite;
+            animation: fall 20s linear infinite;
         }
         @keyframes moveText {
             0% {
@@ -51,12 +51,12 @@
                 transform: translateX(100%);
             }
         }
-        @keyframes moveHeart {
+        @keyframes fall {
             0% {
-                transform: translateY(0) rotate(0deg);
+                transform: translateY(0) translateX(0) scale(1);
             }
             100% {
-                transform: translateY(-200px) rotate(360deg);
+                transform: translateY(100vh) translateX(100vw) scale(0.5);
             }
         }
     </style>
@@ -99,7 +99,7 @@
                 this.speed = speed;
                 this.angle = angle;
                 this.life = 1;
-                this.decay = random(0.01, 0.03);
+                this.decay = random(0.01, 0.02);
             }
 
             update() {
@@ -122,11 +122,11 @@
                 this.particles = [];
                 this.colors = colors;
 
-                for (let i = 0; i < 200; i++) {
+                for (let i = 0; i < 500; i++) {
                     this.particles.push(new Particle(
                         this.x,
                         this.y,
-                        random(0.2, 0.6),
+                        random(0.5, 1),
                         this.colors[Math.floor(Math.random() * this.colors.length)],
                         random(3, 7),
                         random(0, Math.PI * 2)
@@ -153,25 +153,32 @@
         const colors = ['#FF1461', '#18FF92', '#5A87FF', '#FBF38C', '#FF61F6', '#FFA500'];
 
         function createFireworks() {
-            for (let i = 0; i < 5; i++) {
-                fireworks.push(new Firework(
-                    random(0, canvas.width),
-                    random(0, canvas.height),
-                    colors
-                ));
-            }
+            fireworks.push(new Firework(
+                random(0, canvas.width),
+                random(0, canvas.height),
+                colors
+            ));
         }
 
         function createHearts() {
-            for (let i = 0; i < 50; i++) {
-                hearts.push(new Particle(
-                    random(0, canvas.width),
-                    random(0, canvas.height),
-                    random(0.1, 0.5),
-                    colors[Math.floor(Math.random() * colors.length)],
-                    random(1, 3),
-                    random(0, Math.PI * 2)
-                ));
+            hearts.push(new Particle(
+                random(0, canvas.width),
+                random(0, canvas.height),
+                random(0.2, 0.8),
+                colors[Math.floor(Math.random() * colors.length)],
+                random(2, 4),
+                random(0, Math.PI * 2)
+            ));
+        }
+
+        function createStars() {
+            for (let i = 0; i < 500; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                star.style.left = `${Math.random() * 100}vw`;
+                star.style.top = `${Math.random() * 100}vh`;
+                star.style.animationDuration = `${Math.random() * 20 + 10}s`;
+                document.body.appendChild(star);
             }
         }
 
@@ -193,12 +200,12 @@
 
         createFireworks();
         createHearts();
+        createStars();
         animate();
 
-        // Tạo pháo hoa và trái tim mới mỗi 1 giây
-        setInterval(createFireworks, 1000);
-        setInterval(createHearts, 1000);
-
+        setInterval(createFireworks, 500);
+        setInterval(createHearts, 500);
+        
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
